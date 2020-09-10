@@ -9,9 +9,9 @@ import psycopg2 as pg
 parser = argparse.ArgumentParser(description="""
 Reads log table. By default displays the last 1 hour log for all categories with all severities.
 """)
-parser.add_argument('-s', '--start_time', required=True, help="provide time in format of "
+parser.add_argument('-s', '--start_time', required=False, help="provide time in format of "
                                                                "'yyyy/mm/dd hh:mm:ss' with single quotes")
-parser.add_argument('-e', '--end_time', required=True, help="provide time in format of"
+parser.add_argument('-e', '--end_time', required=False, help="provide time in format of"
                                                              " 'yyyy/mm/dd hh:mm:ss' with single quotes")
 parser.add_argument('-st', '--severity', required=True, help="Severity level are INFO,WARNING,FATAL,ERROR")
 parser.add_argument('-c', '--category', required=True,
@@ -22,12 +22,30 @@ parser.add_argument('-c', '--category', required=True,
                     """)
 args = parser.parse_args()
 
-# SQL query to filter out logs from log table.
-SQLQuery = """ SELECT job_id,insert_time,category,message from log
-                       where category=%s and severity=%s and insert_time between %s AND %s;
+
+######################################################
+# SQL Query and Tuple for input params to SQL query  #
+######################################################
+if args.start_time and args.end_time is None:
+    QueryTuple = (args.category, args.severity)
+    SQLQuery = """ SELECT job_id,insert_time,category,message from log
+                       where category=%s and severity=%s;
                        """
-# Tuple of incoming arguments to be inserted to the sql query.
-QueryTuple = (args.category, args.severity, args.start_time, args.end_time)
+elif args.start_time is None:
+    QueryTuple = (args.category, args.severity, args.end_time)
+    SQLQuery = """ SELECT job_id,insert_time,category,message from log
+                       where category=%s and severity=%s and insert_time <= %s;
+                       """
+elif args.end_time is None:
+    QueryTuple = (args.category, args.severity, args.start_time)
+    SQLQuery = """ SELECT job_id,insert_time,category,message from log
+                       where category=%s and severity=%s and insert_time >= %s;
+                       """
+else:
+    QueryTuple = (args.category, args.severity, args.start_time, args.end_time)
+    SQLQuery = """ SELECT job_id,insert_time,category,message from log
+                       where category=%s and severity=%s and insert_time between %s and %s;
+                       """
 
 
 def db_connect():
