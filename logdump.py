@@ -9,9 +9,9 @@ import psycopg2 as pg
 parser = argparse.ArgumentParser(description="""
 Reads log table. By default displays the last 1 hour log for all categories with all severities.
 """)
-parser.add_argument('-s', '--start_time', required=False, help="provide time in format of "
+parser.add_argument('-s', '--start_time', required=True, help="provide time in format of "
                                                                "'yyyy/mm/dd hh:mm:ss' with single quotes")
-parser.add_argument('-e', '--end_time', required=False, help="provide time in format of"
+parser.add_argument('-e', '--end_time', required=True, help="provide time in format of"
                                                              " 'yyyy/mm/dd hh:mm:ss' with single quotes")
 parser.add_argument('-st', '--severity', required=True, help="Severity level are INFO,WARNING,FATAL,ERROR")
 parser.add_argument('-c', '--category', required=True,
