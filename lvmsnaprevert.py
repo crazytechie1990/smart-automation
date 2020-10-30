@@ -26,14 +26,18 @@ CONTAINER_START_CMD = ['docker-compose', '-f', '/store/static/cloudserver.conf',
 REMOVE_SNAP = ['lvremove', '/dev/mapper/centos-snap', '--force']
 
 
-# List of commands
+#####################################
+# Prepare a list for those commands #
+#####################################
 if sys.argv[1] == '--prepdest':
     CMD_LIST = [CONTAINER_STOP_CMD, UMOUNT_ORIG, MOUNT_SNAP, CONTAINER_START_CMD]
 elif sys.argv[1] == '--preporig':
     CMD_LIST = [CONTAINER_STOP_CMD, UMOUNT_ORIG, MOUNT_ORIG, CONTAINER_START_CMD, REMOVE_SNAP]
 
-
-# Function to Snapshot the store volume and prepare it for backup and restore tests from destination and vice versa.
+    
+################################################################################################################################################
+# Function to Snapshot the store volume,mount the snapshot, preapre for tests and then roll back. Refer to the usage for more.                 #
+################################################################################################################################################
 def main():
     for each in CMD_LIST:
         sub_exec = subprocess.Popen(each, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
