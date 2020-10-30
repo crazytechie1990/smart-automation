@@ -3,7 +3,9 @@ import subprocess
 import sys
 
 
-# Usage
+####################
+# Argument parsing #
+####################
 parser = argparse.ArgumentParser(description='Revert LVM Snapshots for E2E Tests')
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument('--prepdest', action='store_true', help="LVM Snapshot the store volume and mounts for testing")
@@ -11,7 +13,9 @@ group.add_argument('--preporig', action='store_true', help="Unmounts the LVM Sna
 args = parser.parse_args()
 
 
-# Commands to Run on Docker Host
+##################################
+# Commands to run on docker host #
+##################################
 SNAP_BEFORE_MIG = ['lvcreate', '--size', '5G', '--snapshot', '--name', 'zenko_snap', '/dev/mapper/centos-zenko_project']
 CONTAINER_STOP_CMD = ['docker-compose', '-f', '/store/static/docker-compose-cloudserver.conf', 'down']
 UMOUNT_ORIG = ['umount', '/store']
@@ -28,7 +32,7 @@ elif sys.argv[1] == '--preporig':
     CMD_LIST = [CONTAINER_STOP_CMD, UMOUNT_ORIG, MOUNT_ORIG, CONTAINER_START_CMD, REMOVE_SNAP]
 
 
-# Function to Snapshot the store volume and prepare it for backup and restore tests from destination.
+# Function to Snapshot the store volume and prepare it for backup and restore tests from destination and vice versa.
 def main():
     for each in CMD_LIST:
         sub_exec = subprocess.Popen(each, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
