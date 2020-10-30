@@ -6,7 +6,7 @@ import sys
 ####################
 # Argument parsing #
 ####################
-parser = argparse.ArgumentParser(description='Revert LVM Snapshots for E2E Tests')
+parser = argparse.ArgumentParser(description='Revert LVM Snapshots for Tests')
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument('--prepdest', action='store_true', help="LVM Snapshot the store volume and mounts for testing")
 group.add_argument('--preporig', action='store_true', help="Unmounts the LVM Snapshot and mounts the original volume")
@@ -16,13 +16,13 @@ args = parser.parse_args()
 ##################################
 # Commands to run on docker host #
 ##################################
-SNAP_BEFORE_MIG = ['lvcreate', '--size', '5G', '--snapshot', '--name', 'zenko_snap', '/dev/mapper/centos-zenko_project']
-CONTAINER_STOP_CMD = ['docker-compose', '-f', '/store/static/docker-compose-cloudserver.conf', 'down']
+SNAP_BEFORE_MIG = ['lvcreate', '--size', '5G', '--snapshot', '--name', 'zenko_snap', '/dev/mapper/centos-project']
+CONTAINER_STOP_CMD = ['docker-compose', '-f', '/store/static/cloudserver.conf', 'down']
 UMOUNT_ORIG = ['umount', '/store']
 MOUNT_SNAP = ['mount', '/dev/mapper/centos-zenko_snap', '/store']
 MOUNT_ORIG = ['mount', '-a']
-CONTAINER_START_CMD = ['docker-compose', '-f', '/store/static/docker-compose-cloudserver.conf', 'up', '-d']
-REMOVE_SNAP = ['lvremove', '/dev/mapper/centos-zenko_snap', '--force']
+CONTAINER_START_CMD = ['docker-compose', '-f', '/store/static/cloudserver.conf', 'up', '-d']
+REMOVE_SNAP = ['lvremove', '/dev/mapper/centos-snap', '--force']
 
 
 # List of commands
