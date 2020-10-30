@@ -13,9 +13,10 @@ group.add_argument('--preporig', action='store_true', help="Unmounts the LVM Sna
 args = parser.parse_args()
 
 
-##################################
-# Commands to run on docker host #
-##################################
+####################################################################################################################
+# Commands to run on Machine                                                                                       #
+# My volume is used by a docker container so i have built my commands accordingly. You can customize accordingly.  #
+####################################################################################################################
 SNAP_BEFORE_MIG = ['lvcreate', '--size', '5G', '--snapshot', '--name', 'zenko_snap', '/dev/mapper/centos-project']
 CONTAINER_STOP_CMD = ['docker-compose', '-f', '/store/static/cloudserver.conf', 'down']
 UMOUNT_ORIG = ['umount', '/store']
