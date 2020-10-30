@@ -16,9 +16,7 @@ parser.add_argument('-e', '--end_time', required=False, help="provide time in fo
 parser.add_argument('-st', '--severity', required=True, help="Severity level are INFO,WARNING,FATAL,ERROR")
 parser.add_argument('-c', '--category', required=True,
                     help="""
-                    Valid categories are QManager,Init,QManager,SYSTEM, tzmclnt'
-                    ,'QueryServer,QueryProduct,QueryMedia,QueryConfig,QueryImages',
-                    CreateConfig,CreateMedia,ExportImages,ImportImages,HouseKeeping
+                    Valid categories are Config,Test,Export,SYSTEM,Import
                     """)
 args = parser.parse_args()
 
@@ -58,8 +56,8 @@ def db_connect():
     try:
         conn = pg.connect(
             host="localhost",
-            database="tranzman",
-            user="postgres",
+            database="<Enter db name>",
+            user="<Enter db user>",
             password="")
         # create a cursor
         cur = conn.cursor()
