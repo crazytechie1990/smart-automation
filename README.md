@@ -1,7 +1,7 @@
 # RandomAutomation
 Mini automation  projects.
 
-**logdump.py**
+**dumplogs.py**
 Tool to read the log table from postgres database and filter out based on category,severity, start and end time.
 
 **lvmsnaprevert.py**
