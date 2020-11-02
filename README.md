@@ -1,10 +1,10 @@
 # RandomAutomation
 AutomationScripts
 
-# Linux 
+### Linux 
 Contains Linux automation scripts, using Ansible and Python.
 
-# NetBackup
+### NetBackup
 Contains Netbackup automation scripts , using Ansible and Python.
 
 
