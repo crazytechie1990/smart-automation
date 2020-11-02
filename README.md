@@ -1,7 +1,6 @@
 # RandomAutomation
 AutomationScripts
-
-*Linux*
+##Linux##
 Contains Linux automation scripts, using Ansible and Python.
 
 *NetBackup*
