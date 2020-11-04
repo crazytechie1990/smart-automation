@@ -1,0 +1,23 @@
+# Tasks to be imported when action is lvremove
+---
+    - name: Volume group for lv
+      pause:
+        prompt: Enter name of volume group for the lv you want to remove, scroll up to check and verify the name of the volume group.
+      register: vg_selected
+
+    - name: Get mount point for the subjected lv
+      command: lsblk -o MOUNTPOINT /dev/mapper/{{ vg_selected.user_input }}-{{ lv_name.user_input }}
+      register: lv_mountpoint
+
+    - name: Unmount the filesystem for the lvremove operation.
+      mount:
+        path: "{{ lv_mountpoint.stdout_lines[1]}}"
+        src: /dev/mapper/{{ vg_selected.user_input}}-{{ lv_name.user_input}}
+        state: unmounted
+
+    - name: Remove the logical volume
+      lvol:
+        vg: "{{ vg_selected.user_input }}"
+        lv: "{{ lv_name.user_input }}"
+        force: yes
+        state: absent
