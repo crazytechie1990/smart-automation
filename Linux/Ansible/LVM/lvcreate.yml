@@ -1,0 +1,59 @@
+# Tasks to be imported when response is Y for available space in a volume group.
+
+    - name: Pause the playbook
+      pause:
+        prompt: "Please enter the volume group to create the lvm on"
+      register: vg_selected
+
+    - name: Existing logical volumes on this volume group are
+      command:
+        cmd: /usr/sbin/lvdisplay "{{ vg_selected.user_input }}"
+
+    - name: Make sure you are not selecting an existing logical volume name to create.
+      debug:
+        msg: "Please note not to select existing logical volume names"
+
+    - name: "lv_size"
+      pause:
+        prompt: "Please enter the size of the logical volume you want to create"
+      register: lv_size
+
+    - name: Create the Logical Volume named "{{ lv_name }}"
+      lvol:
+        vg: "{{ vg_selected.user_input }}"
+        lv: "{{ lv_name }}"
+        size: "{{ lv_size.user_input }}"
+        active: yes
+        force: no
+        state: present
+
+    - name: "lv_filesystem"
+      pause:
+        prompt: "Please enter the fs_type to format the logical volume with"
+      register: lv_filesystem
+
+    - name: Format the volume "/dev/mapper/{{ vg_selected.user_input }}-{{ lv_name }}" with a filesystem
+      filesystem:
+        fstype: "{{ lv_filesystem.user_input }}"
+        dev: "/dev/mapper/{{ vg_selected.user_input }}-{{ lv_name }}"
+        force: no
+
+    - name: "lv_mount_point"
+      pause:
+        prompt: "Please enter the mount point for {{lv_name}}"
+      register: lv_mount_point
+
+
+    - name: Create a directory to mount the filesystem.
+      file:
+        path: "{{ lv_mount_point.user_input }}"
+        state: directory
+        mode: '0755'
+
+    - name: "Mount {{lv_name}} on to lv_mount_point "
+      mount:
+        path: "{{ lv_mount_point.user_input }}"
+        src: "/dev/mapper/{{ vg_selected.user_input}}-{{ lv_name}}"
+        fstype: "{{ lv_filesystem.user_input }}"
+        opts: rw,nosuid,noexec
+        state: mounted
