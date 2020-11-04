@@ -1,0 +1,50 @@
+# Name of the playbook and the hosts on which to run this playbook.
+- name: Playbook to automate LVM Operations.
+  hosts: myserver
+
+
+# Prompt for the variables.
+  vars_prompt:
+    - name: "enter_action"
+      prompt: "Please enter the actions you want to perform: Options are vgcreate, vgextend, vgreduce, lvcreate, lvextend, lvremove, lvmsnapshot"
+      private: no
+
+    - name: "lv_name"
+      prompt: "Please enter the name of the logical volume you want to create"
+      private: no
+
+
+# Tasks in the playbook
+  tasks:
+    - name: List all the volume groups on the System.
+      command:
+        cmd: vgdisplay
+      register: vgdisplay_output
+
+
+    - name: Display Output
+      debug:
+        msg: "{{ vgdisplay_output.stdout_lines}}"
+      when: enter_action == "lvcreate"
+
+    - name: lvdisplay output
+      command:
+        cmd: /usr/sbin/lvdisplay
+      register: lvdisplay_output
+
+
+
+    - name: Check for space in volume group
+      pause:
+        prompt: "Does the volume groups listed above has space for creating logical volume: Enter either Y or N"
+      register: vg_response
+      when: enter_action == "lvcreate"
+
+    - name: Import tasks from lvcreate
+      include_tasks: lvcreate.yml
+      when: enter_action == "lvcreate" and vg_response.user_input == "Y"
+
+    - name: Import tasks for vgcreate
+      debug:
+        msg: "This work is in progres"
+      when: enter_action == "lvcreate" and vg_response.user_input == "N"
