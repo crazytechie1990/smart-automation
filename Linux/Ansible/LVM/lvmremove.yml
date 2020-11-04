@@ -13,7 +13,7 @@
       mount:
         path: "{{ lv_mountpoint.stdout_lines[1]}}"
         src: /dev/mapper/{{ vg_selected.user_input}}-{{ lv_name.user_input}}
-        state: unmounted
+        state: absent
 
     - name: Remove the logical volume
       lvol:
