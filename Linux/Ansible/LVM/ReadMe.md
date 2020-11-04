@@ -8,3 +8,4 @@ _where ansible_hosts will be your inventory file_
 
 
 Note :- Currently i have implemented only two actions of lvcreate and lvremove but if you understood these , creating other actions will be just a walk in the park.
+        Also i haven't added support for xfs filesystem yet , will add it soon
