@@ -1,1 +1,7 @@
-lvm_automate is the main playbook which imports tasks from other playbooks during the play.
+**LVM Automation Using Ansible
+
+lvm_automate.yml is the main playbook which imports tasks from other playbooks during the play. Copy all the playbooks to a directory and run the main playbook lvm_automate.yml as shown below.
+
+ansible-playbook -i ansible_hosts lvm_ansible.yml
+
+where ansible_hosts will be your inventory file.
