@@ -1,0 +1,45 @@
+---
+# Ansible playbook for creating yum repositories on all the Clients.
+
+- name: Create Yum Repositories
+  hosts: all
+
+# Tasks to create repositories on RHEL, CentOS and Ubuntu Clients.
+
+  tasks:
+    - name: Preparing to mount the ISO
+      debug:
+        msg: "Mounting the ISO file on to the cdrom device of {{ ansible_hostname }} and the OS is {{ ansible_distribution }}"
+
+    - name: Mounting now
+      ansible.posix.mount:
+        path: /media
+        src: /dev/cdrom
+        fstype: iso9660
+        state: mounted
+
+    - name: Enable Media Only Repository in CentOS
+      yum:
+        enablerepo: "c8-media-BaseOS, c8-media-AppStream"
+      when:
+        - ansible_facts['distribution']  == "CentOS"
+
+    - name: Create local repo for RHEL Clients
+      copy:
+        dest: "/etc/yum.repos.d/local.repo"
+        mode: '0644'
+        content: |
+          [LocalRepo_BaseOS]
+          name=LocalRepository_BaseOS
+          baseurl=file:///cdrom/BaseOS
+          enabled=1
+          gpgcheck=1
+          gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+          [LocalRepo_AppStream]
+          name=LocalRepository_AppStream
+          baseurl=file:///cdrom/AppStream
+          enabled=1
+          gpgcheck=1
+          gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+      when: ansible_facts['distribution']  == "RedHat"
