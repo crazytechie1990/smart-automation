@@ -43,3 +43,4 @@
           gpgcheck=1
           gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
       when: ansible_facts['distribution']  == "RedHat"
+...
