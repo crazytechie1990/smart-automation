@@ -30,9 +30,9 @@ REMOVE_SNAP = ['lvremove', '/dev/mapper/centos-snap', '--force']
 # Prepare a list for those commands #
 #####################################
 if sys.argv[1] == '--prepdest':
-    CMD_LIST = [SNAP_BEFORE_MIG, CONTAINER_STOP_CMD, UMOUNT_ORIG, MOUNT_SNAP, CONTAINER_START_CMD]
+    CMD_LIST = [CONTAINER_STOP_CMD, UMOUNT_ORIG, MOUNT_SNAP, CONTAINER_START_CMD]
 elif sys.argv[1] == '--preporig':
-    CMD_LIST = [CONTAINER_STOP_CMD, UMOUNT_ORIG, MOUNT_ORIG, CONTAINER_START_CMD, REMOVE_SNAP]
+    CMD_LIST = [CONTAINER_STOP_CMD, UMOUNT_ORIG, SNAP_BEFORE_MIG, MOUNT_ORIG, CONTAINER_START_CMD, REMOVE_SNAP]
 
     
 ################################################################################################################################################
